@@ -14,13 +14,13 @@ namespace GhPython.Component
   {
     protected override void AddDefaultInput(GH_Component.GH_InputParamManager inputManager)
     {
-      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "x"));
-      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "y"));
+      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "testing"));
+      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "testing2"));
     }
 
     protected override void AddDefaultOutput(GH_Component.GH_OutputParamManager outputManager)
     {
-      outputManager.RegisterParam(ConstructVariable(GH_VarParamSide.Output, "a"));
+      outputManager.RegisterParam(ConstructVariable(GH_VarParamSide.Output, "adsffds"));
     }
 
     public override Guid ComponentGuid

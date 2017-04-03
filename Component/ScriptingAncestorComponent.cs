@@ -12,6 +12,7 @@ using Grasshopper.Kernel.Types;
 using Rhino;
 using Rhino.Runtime;
 using System.IO;
+using SPEED;
 
 namespace GhPython.Component
 {
@@ -35,11 +36,13 @@ namespace GhPython.Component
 
     #region Setup
 
-    const string DESCRIPTION = "A python scriptable component";
+    const string DESCRIPTION = "A SPEED python scriptable component";
 
     protected ScriptingAncestorComponent()
-      : base("Python Script", "Python", DESCRIPTION, "Math", "Script")
+      : base("SPEED Python Script", "SPEED Python", DESCRIPTION, "Math", "Script")
     {
+            Category = "SPEED";
+
     }
 
     private static void UnpackScriptResources()
@@ -320,13 +323,86 @@ namespace GhPython.Component
 
     internal abstract void FixGhInput(Param_ScriptVariable i, bool alsoSetIfNecessary = true);
 
-    #endregion
+        #endregion
 
-    #region Solving
+        #region Solving
 
-    protected override void SafeSolveInstance(IGH_DataAccess da)
-    {
-      m_env.DataAccessManager = da;
+        private void iterateSources(Grasshopper.Kernel.IGH_Param source)
+        {
+            // Iterate over sources until you reach the end and the component has no more sources! e.g the DocObject is a Number slider or Param
+
+            try
+            {
+                // Try casting as GHComponent
+                GH_Component upstreamComponent = (GH_Component)source.Attributes.GetTopLevel.DocObject;
+
+                if (upstreamComponent != null)
+                {
+                    foreach (var input in upstreamComponent.Params.Input)
+                    {
+                        foreach (var nextSource in input.Sources)
+                        {
+                            iterateSources(nextSource);
+                        }
+                    }
+                }
+            }
+            catch (System.InvalidCastException)
+            {
+                // source is not a GHComponent
+            }
+
+            try
+            {
+                // Try casting as GHParam
+                IGH_Param upstreamParam = (IGH_Param)source.Attributes.GetTopLevel.DocObject;
+
+                if (upstreamParam != null)
+                {
+                    if (upstreamParam.Sources.Count != 0)
+                    {
+                        foreach (var input in upstreamParam.Sources)
+                        {
+                            foreach (var nextSource in input.Sources)
+                            {
+                                iterateSources(nextSource);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Param has no sources - Could be a SPEED slider, try and cast it as such
+                        SPEED.SPEEDSlider SPEEDslider = (SPEED.SPEEDSlider)upstreamParam;
+
+                        if (SPEEDslider != null)
+                        {// It is a SPEED slider register it as SPEED slider connected to the Export to OSM component
+                            SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Add(SPEEDslider);
+                        }
+                        // End the recursive function
+                        return;
+                    }
+                }
+            }
+            catch (System.InvalidCastException)
+            {
+                // source is not a GhParam
+            }
+        }
+
+        protected override void SafeSolveInstance(IGH_DataAccess da)
+        {
+            // Clear the current register of SPEED sliders upstream
+            SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Clear();
+            // Find all SPEED sliders upstream of this component and register them
+            foreach (var input in this.Params.Input)
+            { 
+                foreach(var source in input.Sources)
+                {
+                        iterateSources(source);
+                }
+            }
+
+        m_env.DataAccessManager = da;
 
       if (m_py == null)
       {
@@ -379,7 +455,7 @@ namespace GhPython.Component
 
           if (string.IsNullOrWhiteSpace(script))
           {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No script to execute");
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No script to execute dsfdsf");
             return;
           }
 
