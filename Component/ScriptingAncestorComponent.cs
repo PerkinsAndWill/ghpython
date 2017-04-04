@@ -391,6 +391,7 @@ namespace GhPython.Component
 
         protected override void SafeSolveInstance(IGH_DataAccess da)
         {
+
             // Clear the current register of SPEED sliders upstream
             SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Clear();
             // Find all SPEED sliders upstream of this component and register them
@@ -401,6 +402,13 @@ namespace GhPython.Component
                         iterateSources(source);
                 }
             }
+
+        if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
+        {
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Component can only run through DesignSpace constructor");
+            return;
+        }
+
 
         m_env.DataAccessManager = da;
 
@@ -455,7 +463,7 @@ namespace GhPython.Component
 
           if (string.IsNullOrWhiteSpace(script))
           {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No script to execute dsfdsf");
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No script to execute");
             return;
           }
 

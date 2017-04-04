@@ -9,13 +9,14 @@ using System.Runtime.InteropServices;
 
 namespace GhPython.Component
 {
-  [Guid("CEAB6E56-CEEC-A646-84D5-363C57440969")]
+  [Guid("2045e0b8-6028-44f7-83d9-ca02c94813b1")]
   public class PythonComponent_OBSOLETE : ScriptingAncestorComponent, IGH_VarParamComponent
   {
     protected override void AddDefaultInput(GH_Component.GH_InputParamManager inputManager)
     {
-      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "testing"));
-      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "testing2"));
+      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "north_"));
+      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "_HBZones"));
+            inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "HBContext_"));
     }
 
     protected override void AddDefaultOutput(GH_Component.GH_OutputParamManager outputManager)

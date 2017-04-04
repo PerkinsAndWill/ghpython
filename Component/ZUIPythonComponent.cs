@@ -8,13 +8,15 @@ using System.Runtime.InteropServices;
 
 namespace GhPython.Component
 {
-  [Guid("410755B1-224A-4C1E-A407-BF32FB45EA7E")]
+  [Guid("ed5912c8-6178-4140-8513-7b7a3e1e94ba")]
   public class ZuiPythonComponent : ScriptingAncestorComponent, IGH_VariableParameterComponent
   {
     protected override void AddDefaultInput(GH_InputParamManager pManager)
     {
-      pManager.AddParameter(CreateParameter(GH_ParameterSide.Input, pManager.ParamCount));
-      pManager.AddParameter(CreateParameter(GH_ParameterSide.Input, pManager.ParamCount));
+
+            pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "north_"));
+            pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "_HBZones"));
+            pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "HBContext_"));
     }
 
     protected override void AddDefaultOutput(GH_OutputParamManager pManager)
@@ -77,10 +79,37 @@ namespace GhPython.Component
       }
       return g_hints;
     }
-    
-    #region IGH_VariableParameterComponent implementation
 
-    public IGH_Param CreateParameter(GH_ParameterSide side, int index)
+        #region IGH_VariableParameterComponent implementation
+
+
+    IGH_Param ConstructVariable(GH_VarParamSide side, string nickname)
+    {
+        if (side == GH_VarParamSide.Input)
+        {
+            var param = new Param_ScriptVariable();
+            if (!string.IsNullOrWhiteSpace(nickname))
+                param.NickName = nickname;
+            FixGhInput(param);
+            return param;
+        }
+        if (side == GH_VarParamSide.Output)
+        {
+            var param = new Param_GenericObject();
+            if (string.IsNullOrWhiteSpace(nickname))
+                param.Name = param.NickName;
+            else
+            {
+                param.NickName = nickname;
+                param.Name = String.Format("Result {0}", nickname);
+            }
+            param.Description = String.Format("Output parameter {0}", param.NickName);
+            return param;
+        }
+        return null;
+    }
+
+        public IGH_Param CreateParameter(GH_ParameterSide side, int index)
     {
       switch (side)
       {
