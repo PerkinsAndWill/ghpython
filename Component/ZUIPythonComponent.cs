@@ -5,13 +5,17 @@ using Grasshopper.Kernel.Parameters.Hints;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using SPEED;
 
 namespace GhPython.Component
 {
+
+
   [Guid("ed5912c8-6178-4140-8513-7b7a3e1e94ba")]
   public class ZuiPythonComponent : ScriptingAncestorComponent, IGH_VariableParameterComponent
   {
-    protected override void AddDefaultInput(GH_InputParamManager pManager)
+
+        protected override void AddDefaultInput(GH_InputParamManager pManager)
     {
 
             pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "north_"));

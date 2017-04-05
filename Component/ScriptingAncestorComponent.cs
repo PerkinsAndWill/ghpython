@@ -18,6 +18,9 @@ namespace GhPython.Component
 {
   public abstract class ScriptingAncestorComponent : SafeComponent
   {
+
+    public string currentOSMFileName; 
+
     static bool g_resources_unpacked = false;
     internal static GrasshopperDocument g_document = new GrasshopperDocument();
 
@@ -374,8 +377,13 @@ namespace GhPython.Component
                         // Param has no sources - Could be a SPEED slider, try and cast it as such
                         SPEED.SPEEDSlider SPEEDslider = (SPEED.SPEEDSlider)upstreamParam;
 
-                        if (SPEEDslider != null)
-                        {// It is a SPEED slider register it as SPEED slider connected to the Export to OSM component
+                        if ((SPEEDslider != null)&&(SPEEDslider.linkedCheckList == null))
+                        {
+                            SPEEDslider.AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "You cannot generate a geometry option from this slider until a linked checklist is created, this slider will be ignored!");
+                        }
+
+                        if ((SPEEDslider != null) && (SPEEDslider.linkedCheckList != null))
+                        {// It is a SPEED slider with a linked CheckList register it as SPEED slider connected to the Export to OSM component
                             SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Add(SPEEDslider);
                         }
                         // End the recursive function
@@ -403,12 +411,16 @@ namespace GhPython.Component
                 }
             }
 
+            SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
+
         if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
         {
             AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Component can only run through DesignSpace constructor");
             return;
         }
 
+        // Set the current OSM File name so that the python code can read it 
+            SPEED.SPEEDSuperClass.currentOSMFileName = currentOSMFileName;
 
         m_env.DataAccessManager = da;
 
