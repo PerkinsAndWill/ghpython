@@ -14,9 +14,9 @@ namespace GhPython.Component
   {
     protected override void AddDefaultInput(GH_Component.GH_InputParamManager inputManager)
     {
-      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "north_"));
-      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "_HBZones"));
-            inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "HBContext_"));
+      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "dsdsds"));
+      inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "sddsdsds"));
+            inputManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "dsd"));
     }
 
     protected override void AddDefaultOutput(GH_Component.GH_OutputParamManager outputManager)

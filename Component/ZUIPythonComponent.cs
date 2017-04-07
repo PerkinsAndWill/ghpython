@@ -17,10 +17,28 @@ namespace GhPython.Component
 
         protected override void AddDefaultInput(GH_InputParamManager pManager)
     {
+            Param_ScriptVariable northInput = new Param_ScriptVariable();
+            northInput.NickName = "north_";
+            northInput.Name = "north_";
+            northInput.Access = GH_ParamAccess.item;
+            northInput.TypeHint = new GH_DoubleHint_CS();
 
-            pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "north_"));
-            pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "_HBZones"));
-            pManager.AddParameter(ConstructVariable(GH_VarParamSide.Input, "HBContext_"));
+            Param_ScriptVariable HBZones = new Param_ScriptVariable();
+            HBZones.NickName = "_HBZones";
+            HBZones.Name = "_HBZones";
+            HBZones.Access = GH_ParamAccess.list;
+            HBZones.TypeHint = new GH_BrepHint();
+
+            Param_ScriptVariable HBContext = new Param_ScriptVariable();
+            HBContext.NickName = "HBContext_";
+            HBContext.Name = "HBContext_";
+            HBContext.Access = GH_ParamAccess.list;
+            HBContext.TypeHint = new GH_BrepHint();
+
+            pManager.AddParameter(northInput);
+            pManager.AddParameter(HBZones);
+            pManager.AddParameter(HBContext);
+
     }
 
     protected override void AddDefaultOutput(GH_OutputParamManager pManager)
@@ -113,14 +131,14 @@ namespace GhPython.Component
         return null;
     }
 
-        public IGH_Param CreateParameter(GH_ParameterSide side, int index)
+    public IGH_Param CreateParameter(GH_ParameterSide side, int index)
     {
       switch (side)
       {
         case GH_ParameterSide.Input:
           {
             return new Param_ScriptVariable
-              {
+            {
                 NickName = GH_ComponentParamServer.InventUniqueNickname("xyzuvwst", this.Params.Input),
                 Name = NickName,
                 Description = "Script variable " + NickName,
@@ -144,23 +162,20 @@ namespace GhPython.Component
 
     bool IGH_VariableParameterComponent.DestroyParameter(GH_ParameterSide side, int index)
     {
-      if(side == GH_ParameterSide.Input && !HiddenCodeInput && index == 0)
-          m_inner_codeInput = Code;
-
       return true;
     }
 
     bool IGH_VariableParameterComponent.CanInsertParameter(GH_ParameterSide side, int index)
     {
-      return index > -1;
+            return false;
     }
 
     bool IGH_VariableParameterComponent.CanRemoveParameter(GH_ParameterSide side, int index)
     {
-      return (this as IGH_VariableParameterComponent).CanInsertParameter(side, index);
+            return false;
     }
 
-    public override void VariableParameterMaintenance()
+        public override void VariableParameterMaintenance()
     {
       foreach (Param_ScriptVariable variable in Params.Input.OfType<Param_ScriptVariable>())
         FixGhInput(variable);

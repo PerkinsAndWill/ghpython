@@ -168,7 +168,9 @@ namespace GhPython.Component
       {
         if (Params.Input.Count < 1)
           return true;
-        return !(Params.Input[0] is Grasshopper.Kernel.Parameters.Param_String);
+
+        return true;
+        //return !(Params.Input[0] is Grasshopper.Kernel.Parameters.Param_String);
       }
       set
       {
@@ -199,7 +201,7 @@ namespace GhPython.Component
       get
       {
         if (HiddenCodeInput)
-          return m_inner_codeInput;
+            return m_inner_codeInput;
 
         return ScriptingAncestorComponent.ExtractCodeString((Param_String)Params.Input[0]);
       }

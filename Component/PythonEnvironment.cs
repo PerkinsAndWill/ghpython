@@ -60,7 +60,7 @@ namespace GhPython.Component
 
             var scopeInfo = hostType.GetProperty("Scope", BindingFlags.NonPublic |
                                                           BindingFlags.GetProperty |
-                                                          BindingFlags.Static);
+                                                          BindingFlags.Static );
             if (scopeInfo != null)
               ScriptScope = scopeInfo.GetValue(null, null);
           }
