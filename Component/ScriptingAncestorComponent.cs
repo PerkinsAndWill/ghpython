@@ -414,20 +414,21 @@ namespace GhPython.Component
             }
 
             SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
-        //TODO change canWriteOSMFile back to true
-        if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
-        {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Component can only run through DesignSpace constructor");
-            return;
-        }
 
         if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
         {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "No SPEED sliders are connected! Only SPEED sliders can be used to form geometry for this component");
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No SPEED sliders with linked CheckLists are connected! Only SPEED sliders can be used to form geometry for this component");
+        }
+
+            // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
+            if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
+        {
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Component can only run through DesignSpace constructor, when the design space constructor is clicked");
+            return;
         }
 
         // Set the current OSM File name so that the python code can read it 
-        SPEED.SPEEDSuperClass.currentOSMFileName = currentOSMFileName;
+        currentOSMFileName = SPEED.SPEEDSuperClass.currentOSMFileName;
 
         m_env.DataAccessManager = da;
 
@@ -476,7 +477,6 @@ namespace GhPython.Component
           string script;
         if (!showing_code_input)
         {
-
             StreamReader sr = new StreamReader(@"C:\Users\szilasia\Documents\SPEED\resources\SPEEDExportToOpenStudio.py");
             script = sr.ReadToEnd();
         }
