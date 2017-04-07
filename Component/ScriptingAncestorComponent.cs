@@ -18,7 +18,7 @@ namespace GhPython.Component
 {
   public abstract class ScriptingAncestorComponent : SafeComponent
   {
-
+    // Accessed from within Python by using ghenv.Component
     public string currentOSMFileName; 
 
     static bool g_resources_unpacked = false;
@@ -414,15 +414,20 @@ namespace GhPython.Component
             }
 
             SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
-
+        //TODO change canWriteOSMFile back to true
         if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
         {
             AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Component can only run through DesignSpace constructor");
             return;
         }
 
+        if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
+        {
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "No SPEED sliders are connected! Only SPEED sliders can be used to form geometry for this component");
+        }
+
         // Set the current OSM File name so that the python code can read it 
-            SPEED.SPEEDSuperClass.currentOSMFileName = currentOSMFileName;
+        SPEED.SPEEDSuperClass.currentOSMFileName = currentOSMFileName;
 
         m_env.DataAccessManager = da;
 
@@ -464,12 +469,18 @@ namespace GhPython.Component
         }
 
         // the "code" string could be embedded in the component itself
+
+        // Looks like code can be run here!!
         if (showing_code_input || m_compiled_py == null)
         {
           string script;
-          if (!showing_code_input)
-            script = Code;
-          else
+        if (!showing_code_input)
+        {
+
+            StreamReader sr = new StreamReader(@"C:\Users\szilasia\Documents\SPEED\resources\SPEEDExportToOpenStudio.py");
+            script = sr.ReadToEnd();
+        }
+        else
           {
             script = null;
             da.GetData(0, ref script);
