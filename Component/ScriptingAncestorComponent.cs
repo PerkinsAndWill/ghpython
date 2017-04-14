@@ -697,7 +697,7 @@ namespace GhPython.Component
 
     protected override Bitmap Icon
     {
-      get { return Resources.python; }
+      get { return Resources.SPEED; }
     }
 
     public override GH_Exposure Exposure

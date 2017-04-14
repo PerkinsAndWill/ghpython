@@ -138,6 +138,7 @@
     <Content Include="Images\python.ico" />
     <Content Include="Images\python.png" />
     <Content Include="Images\unchecked.png" />
+    <EmbeddedResource Include="Images\SPEED.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\PythonScriptForm.resx">
@@ -170,9 +171,6 @@
     <EmbeddedResource Include="package\components.py" />
     <EmbeddedResource Include="package\__init__.py" />
     <EmbeddedResource Include="package\parallel.py" />
-    <Content Include="Samples\sampleCommon.py" />
-    <None Include="Samples\helpText.html" />
-    <Content Include="Samples\sampleScript.py" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
