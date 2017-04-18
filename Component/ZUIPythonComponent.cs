@@ -43,7 +43,6 @@ namespace GhPython.Component
 
     protected override void AddDefaultOutput(GH_OutputParamManager pManager)
     {
-      pManager.RegisterParam(CreateParameter(GH_ParameterSide.Output, pManager.ParamCount));
     }
 
     internal override void FixGhInput(Param_ScriptVariable i, bool alsoSetIfNecessary = true)
@@ -173,6 +172,58 @@ namespace GhPython.Component
     bool IGH_VariableParameterComponent.CanRemoveParameter(GH_ParameterSide side, int index)
     {
             return false;
+    }
+
+    protected override void SafeSolveInstance(IGH_DataAccess da)
+    {
+
+        GH_Document doc = OnPingDocument();
+
+
+        //var watch = System.Diagnostics.Stopwatch.StartNew();
+
+        foreach (SPEEDSlider slider in SPEEDSuperClass.existingSPEEDSliders)
+        {
+            if (doc.FindAllDownstreamObjects(slider).Contains(this))
+            {
+                if (slider.linkedCheckList != null)
+                {
+                    SPEEDSuperClass.slidersConnectedToExportOSMComponent.Add(slider);
+                }
+
+                if (slider.linkedCheckList == null)
+                {
+                    slider.AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "You cannot generate a geometry option from this slider until a linked checklist is created, this slider will be ignored!");
+                }
+            }
+        }
+
+        //watch.Stop();
+
+        if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
+        {
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "No SPEED sliders with linked CheckLists are connected! Only SPEED sliders can be used to form geometry for this component");
+
+            return;
+        }
+
+        this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count.ToString() + " are connected");
+
+        //var elapsedMs = watch.ElapsedMilliseconds;
+
+        SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
+
+        // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
+        if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
+        {
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Component can only run through DesignSpace constructor, when the design space constructor is clicked");
+            return;
+        }
+
+        // Set the current OSM File name so that the python code can read it 
+        currentOSMFileName = SPEED.SPEEDSuperClass.currentOSMFileName;
+
+        base.SafeSolveInstance(da);
     }
 
         public override void VariableParameterMaintenance()

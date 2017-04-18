@@ -44,7 +44,7 @@ namespace GhPython.Component
     protected ScriptingAncestorComponent()
       : base("SPEED Python Script", "SPEED Python", DESCRIPTION, "Math", "Script")
     {
-            Category = "SPEED";
+            Category = "Math";
 
     }
 
@@ -332,103 +332,10 @@ namespace GhPython.Component
 
         #region Solving
 
-        private void iterateSources(Grasshopper.Kernel.IGH_Param source)
-        {
-            // Iterate over sources until you reach the end and the component has no more sources! e.g the DocObject is a Number slider or Param
-
-            try
-            {
-                // Try casting as GHComponent
-                GH_Component upstreamComponent = (GH_Component)source.Attributes.GetTopLevel.DocObject;
-
-                if (upstreamComponent != null)
-                {
-                    foreach (var input in upstreamComponent.Params.Input)
-                    {
-                        foreach (var nextSource in input.Sources)
-                        {
-                            iterateSources(nextSource);
-                        }
-                    }
-                }
-            }
-            catch (System.InvalidCastException)
-            {
-                // source is not a GHComponent
-            }
-
-            try
-            {
-                // Try casting as GHParam
-                IGH_Param upstreamParam = (IGH_Param)source.Attributes.GetTopLevel.DocObject;
-
-                if (upstreamParam != null)
-                {
-                    if (upstreamParam.Sources.Count != 0)
-                    {
-                        foreach (var input in upstreamParam.Sources)
-                        {
-                            foreach (var nextSource in input.Sources)
-                            {
-                                iterateSources(nextSource);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Param has no sources - Could be a SPEED slider, try and cast it as such
-                        SPEED.SPEEDSlider SPEEDslider = (SPEED.SPEEDSlider)upstreamParam;
-
-                        if ((SPEEDslider != null)&&(SPEEDslider.linkedCheckList == null))
-                        {
-                            SPEEDslider.AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "You cannot generate a geometry option from this slider until a linked checklist is created, this slider will be ignored!");
-                        }
-
-                        if ((SPEEDslider != null) && (SPEEDslider.linkedCheckList != null))
-                        {// It is a SPEED slider with a linked CheckList register it as SPEED slider connected to the Export to OSM component
-                            SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Add(SPEEDslider);
-                        }
-                        // End the recursive function
-                        return;
-                    }
-                }
-            }
-            catch (System.InvalidCastException)
-            {
-                // source is not a GhParam
-            }
-        }
+ 
 
         protected override void SafeSolveInstance(IGH_DataAccess da)
         {
-
-            // Clear the current register of SPEED sliders upstream
-            SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Clear();
-            // Find all SPEED sliders upstream of this component and register them
-            foreach (var input in this.Params.Input)
-            { 
-                foreach(var source in input.Sources)
-                {
-                        iterateSources(source);
-                }
-            }
-
-            SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
-
-        if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
-        {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No SPEED sliders with linked CheckLists are connected! Only SPEED sliders can be used to form geometry for this component");
-        }
-
-            // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
-            if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
-        {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "Component can only run through DesignSpace constructor, when the design space constructor is clicked");
-            return;
-        }
-
-        // Set the current OSM File name so that the python code can read it 
-        currentOSMFileName = SPEED.SPEEDSuperClass.currentOSMFileName;
 
         m_env.DataAccessManager = da;
 
@@ -697,7 +604,7 @@ namespace GhPython.Component
 
     protected override Bitmap Icon
     {
-      get { return Resources.SPEED; }
+      get { return Resources.SPEEDIcon; }
     }
 
     public override GH_Exposure Exposure

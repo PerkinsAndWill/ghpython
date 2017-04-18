@@ -12,10 +12,6 @@ namespace GhPython
       get { return "Python interpreter component for grasshopper"; }
     }
 
-    public override Bitmap Icon
-    {
-      get { return Resources.python; }
-    }
 
     public override string Name
     {

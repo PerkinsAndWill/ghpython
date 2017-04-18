@@ -138,7 +138,7 @@
     <Content Include="Images\python.ico" />
     <Content Include="Images\python.png" />
     <Content Include="Images\unchecked.png" />
-    <EmbeddedResource Include="Images\SPEED.png" />
+    <EmbeddedResource Include="Images\SPEEDIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\PythonScriptForm.resx">
