@@ -177,8 +177,9 @@ namespace GhPython.Component
     protected override void SafeSolveInstance(IGH_DataAccess da)
     {
 
-        GH_Document doc = OnPingDocument();
+        SPEEDSuperClass.slidersConnectedToExportOSMComponent.Clear();
 
+        GH_Document doc = OnPingDocument();
 
         //var watch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -200,6 +201,9 @@ namespace GhPython.Component
 
         //watch.Stop();
 
+        SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
+
+
         if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
         {
             AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "No SPEED sliders with linked CheckLists are connected! Only SPEED sliders can be used to form geometry for this component");
@@ -210,8 +214,6 @@ namespace GhPython.Component
         this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count.ToString() + " are connected");
 
         //var elapsedMs = watch.ElapsedMilliseconds;
-
-        SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
 
         // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
         if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
