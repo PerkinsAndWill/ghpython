@@ -203,6 +203,7 @@ namespace GhPython.Component
 
         SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
 
+        SPEED.SPEEDSuperClass.updateDesignSpaceConstructors();
 
         if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
         {
@@ -211,9 +212,14 @@ namespace GhPython.Component
             return;
         }
 
-        this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count.ToString() + " are connected");
-
-        //var elapsedMs = watch.ElapsedMilliseconds;
+        if (SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 1)
+        {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "One SPEED slider is connected");
+        }
+        else
+        {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count.ToString() + " SPEED sliders are connected");
+        }
 
         // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
         if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
