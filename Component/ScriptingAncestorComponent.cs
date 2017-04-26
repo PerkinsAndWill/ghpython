@@ -19,7 +19,9 @@ namespace GhPython.Component
   public abstract class ScriptingAncestorComponent : SafeComponent
   {
     // Accessed from within Python by using ghenv.Component
-    public string currentOSMFileName; 
+    public string currentOSMFileName;
+
+    public string workingDir;
 
     static bool g_resources_unpacked = false;
     internal static GrasshopperDocument g_document = new GrasshopperDocument();
@@ -384,8 +386,17 @@ namespace GhPython.Component
           string script;
         if (!showing_code_input)
         {
-            StreamReader sr = new StreamReader(@"C:\Users\szilasia\Documents\SPEED\resources\SPEEDExportToOpenStudio.py");
-            script = sr.ReadToEnd();
+            if (SPEED.SPEEDSuperClass.debugging)
+            {   // Read code from Form for debugging purposes
+                script = Code;
+            }
+            else
+            { 
+                StreamReader sr = new StreamReader(@"C:\Users\szilasia\Documents\SPEED\resources\SPEEDExportToOpenStudio.py");
+                script = sr.ReadToEnd();
+
+                // Now set the form so that this code appears in the GhPython popup for Debugging purposes
+            }
         }
         else
           {

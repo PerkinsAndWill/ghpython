@@ -44,6 +44,14 @@ namespace GhPython.Forms
         m_texteditor.Dock = DockStyle.Fill;
 
         m_texteditor.Text = _component.Code;
+
+        if (SPEED.SPEEDSuperClass.debugging)
+        {
+            StreamReader sr = new StreamReader(@"C:\Users\szilasia\Documents\SPEED\resources\SPEEDExportToOpenStudio.py");
+            m_texteditor.Text = sr.ReadToEnd();
+
+        }
+
         m_previous_script = m_texteditor.Text;
       }
 
@@ -305,8 +313,16 @@ namespace GhPython.Forms
 
           if (fd.ShowDialog() == DialogResult.OK)
           {
-            string text = File.ReadAllText(fd.FileName);
-            m_texteditor.Text = text;
+            if (SPEED.SPEEDSuperClass.debugging)
+            {
+                StreamReader sr = new StreamReader(@"C:\Users\szilasia\Documents\SPEED\resources\SPEEDExportToOpenStudio.py");
+                m_texteditor.Text = sr.ReadToEnd();
+            }
+            else
+            {
+                string text = File.ReadAllText(fd.FileName);
+                m_texteditor.Text = text;
+            }
           }
         }
       }

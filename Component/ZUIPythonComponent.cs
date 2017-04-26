@@ -15,7 +15,7 @@ namespace GhPython.Component
   public class ZuiPythonComponent : ScriptingAncestorComponent, IGH_VariableParameterComponent
   {
 
-        protected override void AddDefaultInput(GH_InputParamManager pManager)
+    protected override void AddDefaultInput(GH_InputParamManager pManager)
     {
             Param_ScriptVariable northInput = new Param_ScriptVariable();
             northInput.NickName = "north_";
@@ -199,37 +199,40 @@ namespace GhPython.Component
             }
         }
 
-        //watch.Stop();
-
         SPEED.SPEEDSuperClass.updatedesignSpaceProfilers();
 
         SPEED.SPEEDSuperClass.updateDesignSpaceConstructors();
+        
+        if (!SPEED.SPEEDSuperClass.debugging)
+        { 
+            if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "No SPEED sliders with linked CheckLists are connected! Only SPEED sliders can be used to form geometry for this component");
 
-        if (SPEED.SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 0)
-        {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "No SPEED sliders with linked CheckLists are connected! Only SPEED sliders can be used to form geometry for this component");
+                return;
+            }
 
-            return;
-        }
+            if (SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 1)
+            {
+                this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "One SPEED slider is connected");
+            }
+            else
+            {
+                this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count.ToString() + " SPEED sliders are connected");
+            }
 
-        if (SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count == 1)
-        {
-            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "One SPEED slider is connected");
-        }
-        else
-        {
-            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, SPEEDSuperClass.slidersConnectedToExportOSMComponent.Count.ToString() + " SPEED sliders are connected");
-        }
-
-        // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
-        if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
-        {
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Component can only run through DesignSpace constructor, when the design space constructor is clicked");
-            return;
+            // Can only write OSM files IF SPEED Superclass canWriteOSMFile is set to true
+            if (SPEED.SPEEDSuperClass.canWriteOSMFile == false)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Component can only run through DesignSpace constructor, when the design space constructor is clicked");
+                return;
+            }
         }
 
         // Set the current OSM File name so that the python code can read it 
         currentOSMFileName = SPEED.SPEEDSuperClass.currentOSMFileName;
+        // Set the Dir to write the OSM models to 
+        workingDir = SPEED.SPEEDSuperClass.workingDir;
 
         base.SafeSolveInstance(da);
     }

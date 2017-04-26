@@ -19,7 +19,12 @@ namespace GhPython.Component
 
     public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
     {
-      OpenEditor();
+        
+    if (SPEED.SPEEDSuperClass.debugging)
+    {
+        OpenEditor();
+    }
+
       return base.RespondToMouseDoubleClick(sender, e);
     }
 
