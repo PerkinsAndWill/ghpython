@@ -23,6 +23,10 @@ namespace GhPython.Component
 
     public string workingDir;
 
+    public string epwWeatherFilePath;
+
+    public string weatherFileDir;
+
     static bool g_resources_unpacked = false;
     internal static GrasshopperDocument g_document = new GrasshopperDocument();
 

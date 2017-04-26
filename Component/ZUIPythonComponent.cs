@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SPEED;
+using System.IO;
 
 namespace GhPython.Component
 {
@@ -233,6 +234,11 @@ namespace GhPython.Component
         currentOSMFileName = SPEED.SPEEDSuperClass.currentOSMFileName;
         // Set the Dir to write the OSM models to 
         workingDir = SPEED.SPEEDSuperClass.workingDir;
+        
+        epwWeatherFilePath = SPEED.SPEEDSuperClass.epwWeatherFilePath;
+        //TODO, to go with SPEED installer
+
+        weatherFileDir = Path.GetDirectoryName(epwWeatherFilePath);
 
         base.SafeSolveInstance(da);
     }
